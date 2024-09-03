@@ -22,9 +22,8 @@ const drawerWidth = 280;
 
 function Sidebar() {
     return (
-        <div className='flex'>
+        <div className=' flex flex-row'>
             <div>
-                
                 <Drawer
                     sx={{
                         width: drawerWidth,
@@ -71,24 +70,23 @@ function Sidebar() {
                     </List>
                 </Drawer>
             </div>
-            <div className=''>
+            <div className='w-full mr-3'>
                 <div className=''>
-                <AppBar
-                    position="fixed"
-                    sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
-                >
-                    <Toolbar>
-                        <Typography variant="h6" noWrap component="div">
-                            Permanent drawer
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
+                    <AppBar
+                        position="fixed"
+                        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+                    >
+                        <Toolbar>
+                            <Typography variant="h6" noWrap component="div">
+                                Permanent drawer
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
                 </div>
                 <div className='mt-20'>
-                <Outlet></Outlet>
-                <button style={{ position: 'absolute', top: '10px', right: '10px' }}>Logout</button>
+                    <Outlet></Outlet>
+                    <button style={{ position: 'absolute', top: '10px', right: '10px' }}>Logout</button>
                 </div>
-                
             </div>
         </div>
     );

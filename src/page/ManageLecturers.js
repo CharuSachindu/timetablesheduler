@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import '../App.css';
 import axios from 'axios';
-// import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -18,10 +16,13 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-// import Card from '../Components/card';
-import ClickCard from '../Components/card';
-import SearchCard from '../Components/searchcard';
-import PaperCard from '../Components/papercard';
+import Button from '../Components/button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 
 function TablePaginationActions(props) {
@@ -87,14 +88,6 @@ TablePaginationActions.propTypes = {
 
 
 
-
-
-
-
-
-
-
-
 function ManageLecturers() {
   const [lecturerID, setLecturerID] = useState('');
   const [lecturerName, setLecturerName] = useState('');
@@ -104,6 +97,15 @@ function ManageLecturers() {
   const [faculty, setFaculty] = useState();
   const [department, setDepartment] = useState();
   const [lecturers, setlecturers] = useState();
+  const [addOpen, setAddOpen] = useState(false);
+
+  const handleClickAddOpen = () => {
+    setAddOpen(true);
+  }
+
+  const handleAddClose = () => {
+    setAddOpen(false);
+  }
 
   useEffect(() => {
     axios.get('http://localhost:5000/getLecturers')
@@ -163,13 +165,17 @@ function ManageLecturers() {
   return (
 
     <div className='ml-4'>
-      <div className='flex'>
-        <div className='w-1/4 pb-10'>
-        <PaperCard title="Add Lecturer"/>
-        {/* <ClickCard title="Add Lecturer"></ClickCard> */}
+      <div className=' flex flex-row gap-3 pb-5 pt-3 w-full h-full'>
+        <div className='basis-1/4'>
+          {/* <div className=' flex flex-col justify-center shadow-md hover:bg-gray-300 rounded p-10'>
+        Add lecturer
+        </div> */}
+          <Button title={"Add Lecturer"} onClick={handleClickAddOpen} />
         </div>
 
-        <div className='w-3/4'><PaperCard></PaperCard></div>
+        <div className=' flex flex-col justify-center basis-3/4 shadow-md pl-5 pr-1'>
+          <TextField id="outlined-search" label="Search field" type="search" />
+        </div>
       </div>
       <div>
         <TableContainer component={Paper}>
@@ -238,76 +244,123 @@ function ManageLecturers() {
       </div>
 
 
+      <Dialog
+        open={addOpen}
+        onClose={handleAddClose}
+        PaperProps={{
+          component: 'form',
+          onSubmit: (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const formJson = Object.fromEntries(formData.entries());
+            const email = formJson.email;
+            console.log(email);
+            handleAddClose();
+          },
+        }}
+      >
 
+        <DialogTitle>Add Lecturer</DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleSubmit}>
+            <table>
+              <tr>
+                <td>
+                  <label>
+                    Username:
+                  </label>
+                </td>
+                <td>
+                  <TextField id="outlined-search" label="Search field" type="search" onChange={(e) => setUsername(e.target.value)} />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    Password:
+                  </label>
+                </td>
+                <td>
+                  <TextField id="outlined-password-input" label="Password" type="password" onChange={(e) => setPassword(e.target.value)} />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    Lecturer ID:
+                  </label>
+                </td>
+                <td>
+                  <TextField id="outlined-search" label="Search field" type="search" onChange={(e) => setLecturerID(e.target.value)} />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    Lecturer Name:
+                  </label>
+                </td>
+                <td>
+                  <TextField id="outlined-search" label="Search field" type="search" onChange={(e) => setLecturerName(e.target.value)} />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    Choose the faculty
+                  </label>
+                </td>
+                <td>
+                  <select
+                    value={faculty}
+                    onChange={(e) => {
+                      setFaculty(e.target.value);
+                      setDepartment('');
+                    }}
+                  >
+                    <option value="">Select Faculty</option>
+                    <option value="School of Computing">School of Computing</option>
+                    <option value="School of Engineering">School of Engineering</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    Choose the Department:
+                  </label>
+                </td>
+                <td>
+                  <select
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
+                    disabled={!faculty}
+                  >
+                    <option value="">Select Department</option>
+                    {faculty && departments[faculty].map((dept, index) => (
+                      <option key={index} value={dept}>{dept}</option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                <Button type="submit" title={"Submit"} onClick={(e) => handleSubmit}>Submit</Button>
+                </td>
+                <td>
+                <Button onClick={handleAddClose} title={"Cancel"}>Cancel</Button>
+                </td>
+              </tr>
+            </table>
 
+          </form>
+        </DialogContent>
+        <DialogActions>
+          
+          
+        </DialogActions>
 
-
-
-
-
-      <h1>Manage Lecturers</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <label>
-          Lecturer ID:
-          <input
-            type="text"
-            value={lecturerID}
-            onChange={(e) => setLecturerID(e.target.value)}
-          />
-        </label>
-        <label>
-          Lecturer Name:
-          <input
-            type="text"
-            value={lecturerName}
-            onChange={(e) => setLecturerName(e.target.value)}
-          />
-        </label>
-        <label>
-          Choose the faculty:
-          <select
-            value={faculty}
-            onChange={(e) => {
-              setFaculty(e.target.value);
-              setDepartment('');
-            }}
-          >
-            <option value="">Select Faculty</option>
-            <option value="School of Computing">School of Computing</option>
-            <option value="School of Engineering">School of Engineering</option>
-          </select>
-        </label>
-        <label>
-          Choose the Department:
-          <select
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
-            disabled={!faculty}
-          >
-            <option value="">Select Department</option>
-            {faculty && departments[faculty].map((dept, index) => (
-              <option key={index} value={dept}>{dept}</option>
-            ))}
-          </select>
-        </label>
-        <button type="submit" onClick={(e) => handleSubmit}>Submit</button>
-      </form>
+      </Dialog>
     </div>
   );
 }
